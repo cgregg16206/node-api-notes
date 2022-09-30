@@ -1,12 +1,14 @@
 module.exports = function(app, db) {
-  // GET 
-  app.get("/", (req, res) => {
-    res.send("Hello from GET route")
-  })
 
-  // POST 
-  app.post("/notes", (req, res) => {
-    console.log(req.body); 
-    res.send("Hello");
-  })
+  const collection = 
+    app.post("/notes", (req, res) => {
+      const note = { title: req.body.title, text: req.body.text };
+      db.collection("notes").insert(note, (err, result) => {
+        if (err) { 
+          res.send({ "error": "An error has occurred" }); 
+        } else {
+          res.send(result.insertedIds["0"]);
+        }
+      });
+    });
 }; 
